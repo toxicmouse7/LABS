@@ -1,14 +1,16 @@
-#include <Windows.h>
+п»ї#include <Windows.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <wchar.h>
 #include "variables.h"
+#include <time.h>
 
-HWND hEdit; // дискриптор для дочернего окна
+HWND hEdit; // РґРёСЃРєСЂРёРїС‚РѕСЂ РґР»СЏ РґРѕС‡РµСЂРЅРµРіРѕ РѕРєРЅР°
 HWND** m;
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
+    srand(time(NULL));
     HWND hwnd;
     HWND hButton;
     HMENU hMenu = 1;
@@ -26,12 +28,12 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
     ShowWindow(hwnd, nCmdShow);
     UpdateWindow(hwnd);
 
-    hEdit = CreateWindow(L"Edit", NULL, WS_EX_CLIENTEDGE | WS_BORDER | WS_CHILD | WS_VISIBLE, 110, 1, 60, 20, hwnd, NULL, hInstance, 0); // создние дочернего окна
+    hEdit = CreateWindow(L"Edit", NULL, WS_EX_CLIENTEDGE | WS_BORDER | WS_CHILD | WS_VISIBLE, 110, 1, 60, 20, hwnd, NULL, hInstance, 0); // СЃРѕР·РґРЅРёРµ РґРѕС‡РµСЂРЅРµРіРѕ РѕРєРЅР°
     ShowWindow(hEdit, SW_SHOWNORMAL);
-    UpdateWindow(hEdit);// отображение окна 
-    hButton = CreateWindow(L"Button", L"Draw field", WS_CHILD | WS_VISIBLE | WS_BORDER, 2, 25, 120, 30, hwnd, hMenu, hInstance, NULL);
+    UpdateWindow(hEdit);// РѕС‚РѕР±СЂР°Р¶РµРЅРёРµ РѕРєРЅР° 
+    hButton = CreateWindow(L"Button", L"Draw field", WS_CHILD | WS_VISIBLE | WS_BORDER | BS_PUSHBUTTON, 2, 25, 120, 30, hwnd, hMenu, hInstance, NULL);
 
-    // бесконечный цикл обработки событий	
+    // Р±РµСЃРєРѕРЅРµС‡РЅС‹Р№ С†РёРєР» РѕР±СЂР°Р±РѕС‚РєРё СЃРѕР±С‹С‚РёР№	
     while (GetMessage(&msg, NULL, 0, 0)) {
         TranslateMessage(&msg);
         DispatchMessage(&msg);
@@ -53,9 +55,7 @@ case WM_CREATE:
 }
 case WM_COMMAND:
 {
-    switch (LOWORD(wparam))
-    {
-    case 1:
+    if (LOWORD(wparam) == 1)
     {
         int Len;
         wchar_t StrA[20];
@@ -73,33 +73,28 @@ case WM_COMMAND:
                     x + 10 * i, 78 + 13 * j, 10, 13, hwnd, 0, hwnd, NULL);
         }
 
-        HBRUSH WhiteBrush = CreateSolidBrush(RGB(255, 255, 255));
-        SetClassLongW(hwnd, GCLP_HBRBACKGROUND, (LONG)WhiteBrush);
-
         COORD StartPos;
 
-        int ans = a * a + 1;
-        int kol = 0;
         StartPos.X = rand() % a;
         StartPos.Y = rand() % a;
-        SetWindowText(m[StartPos.X][StartPos.Y], L" ");
-        while (kol < ans)
+
+        for (int i = 0; i < a; i++)
+            for (int j = 0; j < a; j++)
+                SetWindowText(m[i][j], L"в¬›");
+
+        for (int i = 0; i < a*a-rand()%a; i++)
         {
             int step = rand() % 4 + 1;
             changPos(&StartPos, step);
             SetWindowText(m[StartPos.X][StartPos.Y], L" ");
-
-            kol++;
         }
-        MessageBox(hwnd, L"Reset field", L"Task", MB_OK);
 
 
         for (int i = 0; i < a; i++)
             free(m[i]);
         free(m);
-        Sleep(3000);
-        break;
-    }
+
+        InvalidateRect(hwnd, NULL, TRUE);
     }
     break;
 }
@@ -111,12 +106,12 @@ case WM_PAINT:
     EndPaint(hwnd, &ps);
     break;
 }
-case WM_DESTROY: // закрытие окна
+case WM_DESTROY: // Р·Р°РєСЂС‹С‚РёРµ РѕРєРЅР°
 {
     PostQuitMessage(0);
     break;
 }
-default: // обработка сообщения по умолчанию
+default: // РѕР±СЂР°Р±РѕС‚РєР° СЃРѕРѕР±С‰РµРЅРёСЏ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
     return DefWindowProc(hwnd, Message, wparam, lparam);
 }
 return 0;
