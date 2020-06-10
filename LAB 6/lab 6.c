@@ -80,9 +80,6 @@ case WM_COMMAND:
 
         int ans = a * a + 1;
         int kol = 0;
-        for (int i = 0; i < a; i++)
-            for (int j = 0; j < a; j++)
-               // SetWindowText(m[i][j], L"*");
         StartPos.X = rand() % a;
         StartPos.Y = rand() % a;
         SetWindowText(m[StartPos.X][StartPos.Y], L" ");
@@ -94,13 +91,13 @@ case WM_COMMAND:
 
             kol++;
         }
-        MessageBox(hwnd, L"Reset fild", L"Task", MB_OK);
+        MessageBox(hwnd, L"Reset field", L"Task", MB_OK);
 
 
         for (int i = 0; i < a; i++)
             free(m[i]);
         free(m);
-        
+        Sleep(3000);
         break;
     }
     }
