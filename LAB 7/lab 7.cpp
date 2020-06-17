@@ -14,6 +14,13 @@ int main(int argc, char* argv[])
        directory = FindCurrentDirectory(argv[0], directory);
     else directory = argv[1];
     HANDLE hDir = CreateFileA((LPCSTR)directory, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, NULL, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OVERLAPPED, NULL);
+
+    if (hDir == INVALID_HANDLE_VALUE)
+    {
+        cout << "Directory you are searching for doesn't exists" << endl;
+        exit(1);
+    }
+
     OVERLAPPED o = {};
     o.hEvent = CreateEvent(0, FALSE, FALSE, 0);
     DWORD nBufferLength = 60 * 1024;
@@ -55,4 +62,5 @@ int main(int argc, char* argv[])
 
     CloseHandle(o.hEvent);
     delete[] lpBuffer;
+    return 0;
 }
