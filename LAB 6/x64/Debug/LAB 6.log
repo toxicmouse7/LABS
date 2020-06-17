@@ -1,7 +1,9 @@
 ﻿  lab 6.c
-C:\Users\Алексей\source\repos\LABS\LAB 6\lab 6.c(10,73): warning C4028: формальный параметр 3 отличается от объявления
-C:\Users\Алексей\source\repos\LABS\LAB 6\lab 6.c(39,22): warning C4244: return: преобразование "WPARAM" в "int", возможна потеря данных
-C:\Users\Алексей\source\repos\LABS\LAB 6\lab 6.c(14,1): warning C4047: инициализация: "HMENU" отличается по уровням косвенного обращения от "int"
-C:\Users\Алексей\source\repos\LABS\LAB 6\lab 6.c(73,1): warning C4133: функция: несовместимые типы - из "HWND" в "HINSTANCE"
-C:\Users\Алексей\source\repos\LABS\LAB 6\lab 6.c(77,65): warning C4311: приведение типов: усечение указателя из "HBRUSH" в "LONG"
+C:\Users\Алексей\source\repos\LABS\LAB 6\lab 6.c(16,73): warning C4028: формальный параметр 3 отличается от объявления
+C:\Users\Алексей\source\repos\LABS\LAB 6\lab 6.c(18,21): warning C4244: функция: преобразование "time_t" в "unsigned int", возможна потеря данных
+C:\Users\Алексей\source\repos\LABS\LAB 6\lab 6.c(48,22): warning C4244: return: преобразование "WPARAM" в "int", возможна потеря данных
+C:\Users\Алексей\source\repos\LABS\LAB 6\lab 6.c(21,1): warning C4047: инициализация: "HMENU" отличается по уровням косвенного обращения от "int"
+C:\Users\Алексей\source\repos\LABS\LAB 6\lab 6.c(82,30): warning C4047: =: "HDC" отличается по уровням косвенного обращения от "BOOL"
+  main function.c
+  Создание кода...
   LAB 6.vcxproj -> C:\Users\Алексей\source\repos\LABS\x64\Debug\LAB 6.exe

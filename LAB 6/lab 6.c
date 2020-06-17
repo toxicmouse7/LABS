@@ -6,7 +6,12 @@
 #include <time.h>
 
 HWND hEdit; // дискриптор для дочернего окна
-HWND** m;
+
+BOOL Line(HDC hdc, int x1, int y1, int x2, int y2)
+{
+    MoveToEx(hdc, x1, y1, NULL); //сделать текущими координаты x1, y1
+    return LineTo(hdc, x2, y2);
+}
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -31,7 +36,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
     hEdit = CreateWindow(L"Edit", NULL, WS_EX_CLIENTEDGE | WS_BORDER | WS_CHILD | WS_VISIBLE, 110, 1, 60, 20, hwnd, NULL, hInstance, 0); // создние дочернего окна
     ShowWindow(hEdit, SW_SHOWNORMAL);
     UpdateWindow(hEdit);// отображение окна 
+
     hButton = CreateWindow(L"Button", L"Draw field", WS_CHILD | WS_VISIBLE | WS_BORDER | BS_PUSHBUTTON, 2, 25, 120, 30, hwnd, hMenu, hInstance, NULL);
+
 
     // бесконечный цикл обработки событий	
     while (GetMessage(&msg, NULL, 0, 0)) {
@@ -57,44 +64,9 @@ case WM_COMMAND:
 {
     if (LOWORD(wparam) == 1)
     {
-        int Len;
-        wchar_t StrA[20];
-        Len = GetWindowText(hEdit, StrA, 20);
-        a = _wtoi(StrA);
-
-        m = (HWND**)malloc(a * sizeof(HWND*));
-        for (int i = 0; i < a; i++)
-            m[i] = (HWND*)malloc(a * sizeof(HWND));
-
-        for (int i = 0; i < a; i++)
-        {
-            for (int j = 0; j < a; j++)
-                m[i][j] = CreateWindow(L"Static", NULL, WS_EX_CLIENTEDGE | WS_CHILD | WS_VISIBLE,
-                    x + 10 * i, 78 + 13 * j, 10, 13, hwnd, 0, hwnd, NULL);
-        }
-
-        COORD StartPos;
-
-        StartPos.X = rand() % a;
-        StartPos.Y = rand() % a;
-
-        for (int i = 0; i < a; i++)
-            for (int j = 0; j < a; j++)
-                SetWindowText(m[i][j], L"⬛");
-
-        for (int i = 0; i < a*a-rand()%a; i++)
-        {
-            int step = rand() % 4 + 1;
-            changPos(&StartPos, step);
-            SetWindowText(m[StartPos.X][StartPos.Y], L" ");
-        }
-
-
-        for (int i = 0; i < a; i++)
-            free(m[i]);
-        free(m);
-
-        InvalidateRect(hwnd, NULL, TRUE);
+        const RECT ReRect = { 100, 100, 200, 200 };
+        InvalidateRect(hwnd, &ReRect, FALSE);
+        UpdateWindow(hwnd);
     }
     break;
 }
@@ -103,7 +75,11 @@ case WM_PAINT:
     hdc = BeginPaint(hwnd, &ps);
     TextOut(hdc, 5, 3, L"Type number: ", 14);
     TextOut(hdc, 5, 80, L"Result: ", 9);
-    EndPaint(hwnd, &ps);
+    HPEN hPen; //Объявляется кисть
+    hPen = CreatePen(PS_SOLID, 1, RGB(0, 0, 0)); //Создаётся объект
+    SelectObject(hdc, hPen); //Объект делается текущим
+    Line(hdc, 100, 100, 200, 200);
+    hdc = EndPaint(hwnd, &ps);
     break;
 }
 case WM_DESTROY: // закрытие окна
