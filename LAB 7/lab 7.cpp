@@ -37,14 +37,30 @@ void PrintNotifyInfo(PFILE_NOTIFY_INFORMATION pNotify)
             break;
         }
     }
-    //wcout << pNotify->Action << ". " << szwFileName << endl;
+}
+
+char* FindCurrentDirectory(char* argv, char* directory)
+{
+    int i = strlen(argv)-1;
+    while (argv[i] != '\\')
+        i--;
+    directory = new char[i];
+    for (int j = 0; j < i + 1; j++)
+        directory[j] = argv[j];
+    directory[i] = '\0';
+   
+    return directory;
 }
 
 int main(int argc, char* argv[])
 {
+    char* directory = nullptr;
     setlocale(LC_ALL, "Russian");
 	DWORD dwWaitStatus;
-    HANDLE hDir = CreateFileA(argv[1], GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, NULL, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OVERLAPPED, NULL);
+    if (argc < 2)
+       directory = FindCurrentDirectory(argv[0], directory);
+    else directory = argv[1];
+    HANDLE hDir = CreateFileA((LPCSTR)directory, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, NULL, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OVERLAPPED, NULL);
     OVERLAPPED o = {};
     o.hEvent = CreateEvent(0, FALSE, FALSE, 0);
     DWORD nBufferLength = 60 * 1024;
