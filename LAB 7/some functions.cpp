@@ -41,6 +41,35 @@ void PrintNotifyInfo(PFILE_NOTIFY_INFORMATION pNotify)
     }
 }
 
+void doSnapshot(char* directory)
+{
+    WIN32_FIND_DATAA FindFileData;
+    FILETIME filetime;
+    SYSTEMTIME systime;
+	HANDLE hf;
+    int pos = strlen(directory);
+    directory[pos] = '\\';
+    directory[pos+1] = '*';
+    directory[pos + 2] = '\0';
+
+	hf = FindFirstFileA(directory, &FindFileData);
+
+    if (hf != INVALID_HANDLE_VALUE)
+    {
+        do
+        {
+            FileTimeToSystemTime(&FindFileData.ftLastWriteTime, &systime);
+            //FileTimeToLocalFileTime(FindFileData.ftLastWriteTime, &)
+            cout << FindFileData.cFileName << " " << FindFileData.nFileSizeLow << " bytes, last access: " <<systime.wHour << ":" << systime.wMinute << ":" << systime.wSecond << endl;
+
+        } while (FindNextFileA(hf, &FindFileData) != 0);
+        FindClose(hf);
+    }
+    else cout << "An error has accured" << GetLastError() << endl;
+
+    directory[pos] = '\0';
+}
+
 char* FindCurrentDirectory(char* argv, char* directory)
 {
     int i = strlen(argv) - 1;

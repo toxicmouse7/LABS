@@ -13,6 +13,7 @@ int main(int argc, char* argv[])
     if (argc < 2)
        directory = FindCurrentDirectory(argv[0], directory);
     else directory = argv[1];
+    doSnapshot(directory);
     HANDLE hDir = CreateFileA((LPCSTR)directory, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, NULL, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OVERLAPPED, NULL);
 
     if (hDir == INVALID_HANDLE_VALUE)
@@ -45,6 +46,9 @@ int main(int argc, char* argv[])
                 seek += pNotify->NextEntryOffset;
 
                 PrintNotifyInfo(pNotify);
+                Sleep(1000);
+                system("cls");
+                doSnapshot(directory);
 
                 if (pNotify->NextEntryOffset == 0)
                     break;
